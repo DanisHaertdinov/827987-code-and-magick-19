@@ -11,23 +11,17 @@ var SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
 var TEXT_LINE_HEIGHT = 20;
 var TEXT_FONT_STYLE = '16px PT Mono';
 var TEXT_COLOR = '#000';
-var WIN_TEXT = ['Ура вы победили!', 'Список результатов:'];
+var WIN_TEXT_STRINGS = ['Ура вы победили!', 'Список результатов:'];
 var COLUMN_MAX_HEIGHT = 150;
 var COLUMN_WIDTH = 40;
 var COLUMN_MARGIN = 25;
 
 var getRandomNumber = function (maxValue) {
-  return Math.ceil(Math.random() * maxValue);
+  return Math.ceil(Math.random() * maxValue + 1);
 };
 
-var getMaxValueOfArr = function (arr) {
-  var maxValue = 0;
-  arr.forEach(function (el) {
-    if (el > maxValue) {
-      maxValue = el;
-    }
-  });
-  return maxValue;
+var getMaxValueOfArray = function (array) {
+  return Math.max.apply(null, array);
 };
 
 var getRandomSaturationColor = function (hue) {
@@ -35,21 +29,17 @@ var getRandomSaturationColor = function (hue) {
 };
 
 var renderHistogram = function (ctx, names, times) {
-  var highestTime = Math.floor(getMaxValueOfArr(times));
+  var highestTime = Math.floor(getMaxValueOfArray(times));
 
   times.forEach(function (time, index) {
     time = Math.floor(time);
     var columnX = CLOUD_X + CLOUD_PADDING + COLUMN_MARGIN + (COLUMN_WIDTH + COLUMN_MARGIN * 2) * index;
     var columnHeight = COLUMN_MAX_HEIGHT * time / highestTime;
     var columnY = CLOUD_Y + CLOUD_HEIGHT - CLOUD_PADDING - TEXT_LINE_HEIGHT - columnHeight;
-    var columnColor = getRandomSaturationColor(240);
-    if (names[index] === 'Вы') {
-      columnColor = 'red';
-    }
+    var columnColor = (names[index] === 'Вы') ? 'red' : getRandomSaturationColor(240);
     renderRect(ctx, columnX, columnY, COLUMN_WIDTH, columnHeight, columnColor);
     renderString(ctx, time, columnX, columnY - TEXT_LINE_HEIGHT);
     renderString(ctx, names[index], columnX, columnY + columnHeight);
-
   });
 };
 
@@ -65,18 +55,21 @@ var renderString = function (ctx, string, x, y) {
   ctx.fillText(string, x, y);
 };
 
-var renderMultiLineText = function (ctx, textArr, x, firstLineY) {
+var renderWinText = function (ctx, winTextStrings, x, firstLineY) {
   var y = firstLineY;
-  var lineHeight = TEXT_LINE_HEIGHT;
-  textArr.forEach(function (line, index) {
-    y += lineHeight * index;
+  winTextStrings.forEach(function (line, index) {
+    y += TEXT_LINE_HEIGHT * index;
     renderString(ctx, line, x, y);
   });
 };
 
-window.renderStatistics = function (ctx, names, times) {
+var renderCloud = function (ctx) {
   renderRect(ctx, CLOUD_X + SHADOW_GAP, CLOUD_Y + SHADOW_GAP, CLOUD_WIDTH, CLOUD_HEIGHT, SHADOW_COLOR);
   renderRect(ctx, CLOUD_X, CLOUD_Y, CLOUD_WIDTH, CLOUD_HEIGHT, CLOUD_COLOR);
-  renderMultiLineText(ctx, WIN_TEXT, CLOUD_X + CLOUD_PADDING, CLOUD_Y + CLOUD_PADDING);
+};
+
+window.renderStatistics = function (ctx, names, times) {
+  renderCloud(ctx);
+  renderWinText(ctx, WIN_TEXT_STRINGS, CLOUD_X + CLOUD_PADDING, CLOUD_Y + CLOUD_PADDING);
   renderHistogram(ctx, names, times);
 };
