@@ -37,7 +37,6 @@ var EYES_COLORS = [
 var NUMBER_OF_MOCKS = 4;
 
 var setup = document.querySelector('.setup');
-var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -69,6 +68,7 @@ var collectWizardsMocks = function (number) {
 };
 
 var createWizard = function (wizardMock) {
+  var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
   var wizard = similarWizardTemplate.cloneNode(true);
   wizard.querySelector('.setup-similar-label').textContent = wizardMock.name;
   wizard.querySelector('.wizard-coat').style.fill = wizardMock.coatColor;
