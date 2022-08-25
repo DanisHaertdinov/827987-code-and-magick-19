@@ -50,3 +50,5 @@ git clone SSH-адрес_вашего_форка
 
 [travis-image]: https://travis-ci.com/htmlacademy-javascript/827987-code-and-magick-19.svg?branch=master
 [travis-url]: https://travis-ci.com/htmlacademy-javascript/827987-code-and-magick-19
+
+
